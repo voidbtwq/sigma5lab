@@ -1,53 +1,28 @@
 import unittest
-
-def is_palindrome(text):
-    clean_text = text.replace(" ", "").lower()
-    return clean_text == clean_text[::-1]
-
-
-def main():
-    text = input("Введите слово или фразу: ")
-    if is_palindrome(text):
-        print(f"'{text}' — это палиндром!")
-    else:
-        print(f"'{text}' — не палиндром.")
-
+from palindrome_checker import is_palindrome
 
 class TestPalindrome(unittest.TestCase):
 
-    def test_single_word_palindrome(self):
-        self.assertTrue(is_palindrome("казак"))
-        self.assertTrue(is_palindrome("шалаш"))
-        self.assertTrue(is_palindrome("горарог"))
+    def test_known_palindromes(self):
+        self.assertTrue(is_palindrome("А роза упала на лапу Азора"))
+        self.assertTrue(is_palindrome("Madam"))
+        self.assertTrue(is_palindrome("Never odd or even"))
+        self.assertTrue(is_palindrome("radar"))
 
-    def test_single_word_not_palindrome(self):
-        self.assertFalse(is_palindrome("мама"))
+    def test_non_palindromes(self):
+        self.assertFalse(is_palindrome("hello"))
         self.assertFalse(is_palindrome("python"))
-        self.assertFalse(is_palindrome("привет"))
+        self.assertFalse(is_palindrome("race a car"))  # "raceacar" != "racacear"
 
-    def test_phrase_with_spaces(self):
-        self.assertTrue(is_palindrome("а роза упала на лапу азора"))
-        self.assertTrue(is_palindrome("аргентина манит"))
-        self.assertTrue(is_palindrome("лепс спел"))
+    def test_edge_cases(self):
+        self.assertTrue(is_palindrome(""))      # пустая строка
+        self.assertTrue(is_palindrome("a"))     # один символ
+        self.assertTrue(is_palindrome("   "))   # только пробелы (после очистки – пустая)
+        self.assertFalse(is_palindrome("ab"))   # не палиндром
 
-    def test_case_insensitive(self):
-        self.assertTrue(is_palindrome("Анна"))
-        self.assertTrue(is_palindrome("КазаК"))
-        self.assertTrue(is_palindrome("ШалаШ"))
-        self.assertTrue(is_palindrome("А Роза Упала На Лапу Азора"))
+    def test_case_and_spaces(self):
+        self.assertTrue(is_palindrome("   A    "))   # после очистки "a"
+        self.assertTrue(is_palindrome("A man a plan a canal panama"))
 
-    def test_empty_string(self):
-        self.assertTrue(is_palindrome("")) 
-
-    def test_single_character(self):
-        self.assertTrue(is_palindrome("а"))
-        self.assertTrue(is_palindrome("z"))
-        self.assertTrue(is_palindrome("9"))
-
-    def test_numbers_and_mixed(self):
-        self.assertTrue(is_palindrome("12321"))
-        self.assertTrue(is_palindrome("123 321"))
-        self.assertTrue(is_palindrome("a1b2c2b1a"))
-        self.assertFalse(is_palindrome("12345"))
-
-
+if __name__ == "__main__":
+    unittest.main()
